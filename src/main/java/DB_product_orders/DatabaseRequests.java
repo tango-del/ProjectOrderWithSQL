@@ -2,13 +2,14 @@ package DB_product_orders;
 
 import Entities.Product;
 import Enums.ProductStatus;
+import Interfaces.SqlRequests;
 import org.hibernate.Query;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class DatabaseRequests {
+public class DatabaseRequests implements SqlRequests {
     private Scanner scanner;
     private static Query query;
     // хранит полную локальную дату времени компьютера
@@ -18,6 +19,7 @@ public class DatabaseRequests {
     // отформатированное время по указанному паттерну
     private static final String dateTime = currentDateTime.format(formatter);
 
+    @Override
     public void createRawProduct() {
         Product testProduct = new Product();
 
@@ -44,10 +46,12 @@ public class DatabaseRequests {
         Connect.session.getTransaction().commit();
     }
 
+    @Override
     public void createOrder() {
         System.out.println("createOrder method");
     }
 
+    @Override
     public void updateOrderEntryQuantity() {
         System.out.println("updateOrderEntryQuantity method");
     }
