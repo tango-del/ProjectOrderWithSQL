@@ -23,6 +23,6 @@
         <property name="connection.pool_size">1</property>
         <property name="current_session_context_class">thread</property>
 
-<!--        <mapping class="entities.Student"/>-->
+        <mapping class="Entities.Product"/>
     </session-factory>
 </hibernate-configuration>
