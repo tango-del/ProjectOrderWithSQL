@@ -24,5 +24,6 @@
         <property name="current_session_context_class">thread</property>
 
         <mapping class="Entities.Product"/>
+        <mapping class="Entities.Order"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,5 +1,6 @@
 package DB_product_orders;
 
+import Entities.Order;
 import Entities.Product;
 import Enums.ProductStatus;
 import Interfaces.SqlRequests;
@@ -12,7 +13,7 @@ import java.util.Scanner;
 public class DatabaseRequests implements SqlRequests {
     private Scanner scanner;
     private static Query query;
-    private static int userId;
+    private static int userId = (int) (Math.random() * 50 + 1);
     // хранит полную локальную дату времени компьютера
     private static final LocalDateTime currentDateTime = LocalDateTime.now();
     // форматирует локальную дату по указанным ключам
@@ -49,22 +50,56 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void createOrder() {
-        userId = (int) (Math.random() * 50 + 1);
+//        userId = (int) (Math.random() * 50 + 1);
         System.out.println("user id : " + userId);
-
         scanner = new Scanner(System.in);
 
 
         System.out.println("Choose Product ID");
         int productId = scanner.nextInt();
 
+        Connect.session.beginTransaction();
         query = Connect.session.createQuery("select status from Product where id = " + productId);
-        System.out.println(query.uniqueResult());
+        Connect.session.getTransaction().commit();
+
+        boolean result = checkProductStatusToMakeOrder((ProductStatus) query.uniqueResult());
+
+
+        if (result) {
+            System.out.println("select quantity");
+            int quantity = scanner.nextInt();
+            Order order = new Order();
+            order.setUserId(userId);
+            order.setStatus("active");
+            order.setCreatedAt(dateTime);
+
+            Connect.session.beginTransaction();
+            Connect.session.save(order);
+            Connect.session.getTransaction().commit();
+
+            Connect.session.beginTransaction();
+            query = Connect.session.createQuery("select id from Order where userId = " + userId + " and createdAt = " + dateTime);
+            int orderId = (int) query.uniqueResult();
+            Connect.session.getTransaction().commit();
+
+
+
+        } else {
+            System.out.println("This Product OUT OF STOCK");
+        }
     }
 
     @Override
     public void updateOrderEntryQuantity() {
-        System.out.println("updateOrderEntryQuantity method");
+        System.out.println("in development");
+    }
+
+    private boolean checkProductStatusToMakeOrder(ProductStatus productStatus) {
+        switch (productStatus) {
+            case in_stock:
+            case running_low: return true;
+            default: return false;
+        }
     }
 
     private ProductStatus chooseProductStatus() {
