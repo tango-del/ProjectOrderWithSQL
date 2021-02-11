@@ -1,5 +1,5 @@
 package Enums;
 
 public enum ProductStatus {
-    OUT_OF_STOCK, IN_STOCK, RUNNING_LOW;
+    out_of_stock, in_stock, running_low;
 }

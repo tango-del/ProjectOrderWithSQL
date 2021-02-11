@@ -1,5 +1,6 @@
 package Entities;
 
+import Enums.ProductStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,8 +25,9 @@ public class Product {
     @Column(name = "price")
     private int price;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private int status;
+    private ProductStatus status;
 
     @Column(name = "created_at")
     private String dataCreate;

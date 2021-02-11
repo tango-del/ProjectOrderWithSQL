@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class DatabaseRequests implements SqlRequests {
     private Scanner scanner;
     private static Query query;
+    private static int userId;
     // хранит полную локальную дату времени компьютера
     private static final LocalDateTime currentDateTime = LocalDateTime.now();
     // форматирует локальную дату по указанным ключам
@@ -32,14 +33,14 @@ public class DatabaseRequests implements SqlRequests {
         int productPrice = scanner.nextInt();
 
         System.out.println("Choose Product Status");
-        int productStatus = chooseProductStatus();
-
-        scanner.close();
+        ProductStatus userChooseProductStatus = chooseProductStatus();
 
         testProduct.setPrice(productPrice);
         testProduct.setName(name);
-        testProduct.setStatus(productStatus);
+        testProduct.setStatus(userChooseProductStatus);
         testProduct.setDataCreate(dateTime);
+
+        scanner.close();
 
         Connect.session.beginTransaction();
         Connect.session.save(testProduct);
@@ -48,7 +49,17 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void createOrder() {
-        System.out.println("createOrder method");
+        userId = (int) (Math.random() * 50 + 1);
+        System.out.println("user id : " + userId);
+
+        scanner = new Scanner(System.in);
+
+
+        System.out.println("Choose Product ID");
+        int productId = scanner.nextInt();
+
+        query = Connect.session.createQuery("select status from Product where id = " + productId);
+        System.out.println(query.uniqueResult());
     }
 
     @Override
@@ -56,18 +67,21 @@ public class DatabaseRequests implements SqlRequests {
         System.out.println("updateOrderEntryQuantity method");
     }
 
-    private int chooseProductStatus() {
+    private ProductStatus chooseProductStatus() {
         System.out.println("1 - out_of_stock");
         System.out.println("2 - in_stock");
         System.out.println("3 - running_low");
 
         int productStatus = scanner.nextInt();
         switch (productStatus) {
-            case 1 :
-            case 2 :
-            case 3 :
-                return productStatus;
-            default: throw new RuntimeException("incorrect choose product status");
+            case 1:
+                return ProductStatus.out_of_stock;
+            case 2:
+                return ProductStatus.in_stock;
+            case 3:
+                return ProductStatus.running_low;
+            default:
+                throw new RuntimeException("incorrect choose product status");
         }
     }
 }

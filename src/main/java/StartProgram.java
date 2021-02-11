@@ -1,5 +1,7 @@
 import DB_product_orders.Connect;
 import DB_product_orders.DatabaseRequests;
+import Enums.ProductStatus;
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import java.util.Scanner;
@@ -10,6 +12,7 @@ public class StartProgram {
     public static void main(String[] args) {
         Session session = Connect.getSession(); // create connection
         init();
+        session.close();
     }
 
     public static void init() {
