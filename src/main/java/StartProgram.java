@@ -5,6 +5,8 @@ import org.hibernate.Session;
 import java.util.Scanner;
 
 public class StartProgram {
+    public static Scanner scanner;
+
     public static void main(String[] args) {
         Session session = Connect.getSession(); // create connection
         init();
@@ -16,7 +18,7 @@ public class StartProgram {
         System.out.println("2 - Create Order");
         System.out.println("3 - Update Order quantities");
 
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
 
         int userChoose = scanner.nextInt();
 
@@ -35,5 +37,6 @@ public class StartProgram {
             default:
                 System.out.println("In development");
         }
+        scanner.close();
     }
 }
