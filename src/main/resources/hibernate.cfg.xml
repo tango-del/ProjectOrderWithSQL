@@ -25,5 +25,6 @@
 
         <mapping class="Entities.Product"/>
         <mapping class="Entities.Order"/>
+        <mapping class="Entities.OrderItems"/>
     </session-factory>
 </hibernate-configuration>

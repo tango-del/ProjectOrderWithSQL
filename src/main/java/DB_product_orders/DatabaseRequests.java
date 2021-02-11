@@ -1,6 +1,7 @@
 package DB_product_orders;
 
 import Entities.Order;
+import Entities.OrderItems;
 import Entities.Product;
 import Enums.ProductStatus;
 import Interfaces.SqlRequests;
@@ -78,11 +79,18 @@ public class DatabaseRequests implements SqlRequests {
             Connect.session.getTransaction().commit();
 
             Connect.session.beginTransaction();
-            query = Connect.session.createQuery("select id from Order where userId = " + userId + " and createdAt = " + dateTime);
+            query = Connect.session.createQuery("select id from Order where userId = " + userId + " and createdAt = '" + dateTime + "'");
             int orderId = (int) query.uniqueResult();
             Connect.session.getTransaction().commit();
 
+            OrderItems orderItems = new OrderItems();
+            orderItems.setOrderId(orderId);
+            orderItems.setProductId(productId);
+            orderItems.setQuantity(quantity);
 
+            Connect.session.beginTransaction();
+            Connect.session.save(orderItems);
+            Connect.session.getTransaction().commit();
 
         } else {
             System.out.println("This Product OUT OF STOCK");
