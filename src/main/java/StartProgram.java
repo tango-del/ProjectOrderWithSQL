@@ -1,9 +1,13 @@
 import DB_product_orders.Connect;
 import DB_product_orders.DatabaseRequests;
+import Entities.Order;
+import Entities.OrderItems;
 import Enums.ProductStatus;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class StartProgram {
@@ -11,6 +15,37 @@ public class StartProgram {
 
     public static void main(String[] args) {
         Session session = Connect.getSession(); // create connection
+//        session.beginTransaction();
+//
+//        Order order = new Order();
+//        order.setUserId(3532);
+//        order.setStatus("active");
+//
+//        LocalDateTime currentDateTime = LocalDateTime.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        String dateTime = currentDateTime.format(formatter);
+//
+//        order.setCreatedAt(dateTime);
+//
+////        session.save(order);
+//
+//        OrderItems orderItems1 = new OrderItems();
+////        orderItems1.setOrderId(55);
+//        orderItems1.setProductId(12);
+//        orderItems1.setQuantity(14);
+//        orderItems1.setOrder(order);
+//
+////        session.save(orderItems1);
+//
+//        OrderItems orderItems2 = new OrderItems();
+////        orderItems2.setOrderId(55);
+//        orderItems2.setProductId(14);
+//        orderItems2.setQuantity(2);
+//        orderItems2.setOrder(order);
+//
+////        session.save(orderItems2);
+//
+//        session.getTransaction().commit();
         init();
         session.close();
     }

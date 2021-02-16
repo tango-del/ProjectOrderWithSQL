@@ -7,9 +7,10 @@ import Enums.ProductStatus;
 import Interfaces.SqlRequests;
 import org.hibernate.Query;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
+import java.util.*;
 
 public class DatabaseRequests implements SqlRequests {
     private Scanner scanner;
@@ -56,45 +57,126 @@ public class DatabaseRequests implements SqlRequests {
         scanner = new Scanner(System.in);
 
 
-        System.out.println("Choose Product ID");
-        int productId = scanner.nextInt();
+        // заполняю массив с product id
 
-        Connect.session.beginTransaction();
-        query = Connect.session.createQuery("select status from Product where id = " + productId);
-        Connect.session.getTransaction().commit();
+        List<Integer> list = new ArrayList<>();
 
-        boolean result = checkProductStatusToMakeOrder((ProductStatus) query.uniqueResult());
+        String choose;
+
+        do {
+            System.out.println("choose product id");
+//            Integer pId = scanner.nextInt();
+
+            list.add(scanner.nextInt());
+
+            System.out.println("want to continue?");
+            choose = scanner.next();
+
+        } while (choose.equalsIgnoreCase("Y"));
 
 
-        if (result) {
-            System.out.println("select quantity");
-            int quantity = scanner.nextInt();
-            Order order = new Order();
-            order.setUserId(userId);
-            order.setStatus("active");
-            order.setCreatedAt(dateTime);
+        // проверка каждого id что можно заказать
+
+        /*
+        list.stream().filter(f -> {
+            Connect.session.beginTransaction();
+            query = Connect.session.createQuery("select status from Product where id = " + f);
+            Connect.session.getTransaction().commit();
+            return checkProductStatusToMakeOrder((ProductStatus) query.uniqueResult());
+        }).forEach();
+         */
+
+        System.out.println(list.size() + "list size");
+
+        list.removeIf(f -> {
+            Connect.session.beginTransaction();
+            query = Connect.session.createQuery("select status from Product where id = " + f);
+            Connect.session.getTransaction().commit();
+            return !checkProductStatusToMakeOrder((ProductStatus) query.uniqueResult());
+        });
+
+        System.out.println(list.size() + "list size");
+
+        if (!list.isEmpty()) {
+            Order order1 = new Order();
+            order1.setUserId(userId);
+            order1.setStatus("active");
+            order1.setCreatedAt(dateTime);
 
             Connect.session.beginTransaction();
-            Connect.session.save(order);
+
+            Connect.session.save(order1);
+
+            list.forEach(f -> {
+                OrderItems orderItems = new OrderItems();
+                orderItems.setProductId(f);
+
+                System.out.println("Set product id " + f + " quantity");
+                int quantity = scanner.nextInt();
+
+                orderItems.setQuantity(quantity);
+                orderItems.setOrder(order1);
+
+                Connect.session.save(orderItems);
+            });
             Connect.session.getTransaction().commit();
-
-            Connect.session.beginTransaction();
-            query = Connect.session.createQuery("select id from Order where userId = " + userId + " and createdAt = '" + dateTime + "'");
-            int orderId = (int) query.uniqueResult();
-            Connect.session.getTransaction().commit();
-
-            OrderItems orderItems = new OrderItems();
-            orderItems.setOrderId(orderId);
-            orderItems.setProductId(productId);
-            orderItems.setQuantity(quantity);
-
-            Connect.session.beginTransaction();
-            Connect.session.save(orderItems);
-            Connect.session.getTransaction().commit();
-
-        } else {
-            System.out.println("This Product OUT OF STOCK");
         }
+
+        /*
+        System.out.println("Input Products ID by Space");
+
+        String userChoose = scanner.nextLine();
+
+        String[] productsId = userChoose.split(" ", 0);
+
+        Arrays.stream(productsId).filter(f -> f.chars().allMatch(Character::isDigit)).
+
+        for (String str : productsId) {
+
+            if (str.chars().allMatch(Character::isDigit)){
+
+            }
+        }
+         */
+
+
+//        int productId = scanner.nextInt();
+//
+//        Connect.session.beginTransaction();
+//        query = Connect.session.createQuery("select status from Product where id = " + productId);
+//        Connect.session.getTransaction().commit();
+
+//        boolean result = checkProductStatusToMakeOrder((ProductStatus) query.uniqueResult());
+//
+//        if (result) {
+//            System.out.println("select quantity");
+//            int quantity = scanner.nextInt();
+//            Order order = new Order();
+//            order.setUserId(userId);
+//            order.setStatus("active");
+//            order.setCreatedAt(dateTime);
+//
+//            Connect.session.beginTransaction();
+//            Connect.session.save(order);
+//            Connect.session.getTransaction().commit();
+//
+//            Connect.session.beginTransaction();
+//            query = Connect.session.createQuery("select id from Order where userId = " + userId + " and createdAt = '" + dateTime + "'");
+//            int orderId = (int) query.uniqueResult();
+//            Connect.session.getTransaction().commit();
+//
+//            OrderItems orderItems = new OrderItems();
+////            orderItems.setOrderId(orderId);
+////            orderItems.setProductId(productId);
+//            orderItems.setQuantity(quantity);
+//
+//            Connect.session.beginTransaction();
+//            Connect.session.save(orderItems);
+//            Connect.session.getTransaction().commit();
+//
+//        } else {
+//            System.out.println("This Product OUT OF STOCK");
+//        }
     }
 
     @Override

@@ -31,4 +31,7 @@ public class Product {
 
     @Column(name = "created_at")
     private String dataCreate;
+
+    public Product() {
+    }
 }
