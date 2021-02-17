@@ -25,6 +25,7 @@ public class StartProgram {
         System.out.println("1 - Create Product");
         System.out.println("2 - Create Order");
         System.out.println("3 - Update Order quantities");
+        System.out.println("4 - Output commands:");
 
         scanner = new Scanner(System.in);
 
@@ -41,6 +42,25 @@ public class StartProgram {
                 break;
             case 3:
                 requests.updateOrderEntryQuantity();
+                break;
+            case 4:
+                System.out.println("1 - Output name, price, status for all products");
+                System.out.println("2 - Output products ordered at least once");
+                System.out.println("3 - Output Order id, created date, Product price, name, quantity bu order id");
+                int outputChoose = scanner.nextInt();
+                switch (outputChoose) {
+                    case 1:
+                        requests.outputAllProduct();
+                        break;
+                    case 2:
+                        requests.outputProductOrderedOnce();
+                        break;
+                    case 3:
+                        requests.outputOrderIdDateWithProductPriceNameQuantByOrderId();
+                        break;
+                    case 4:
+                    default:
+                }
                 break;
             default:
                 System.out.println("In development");

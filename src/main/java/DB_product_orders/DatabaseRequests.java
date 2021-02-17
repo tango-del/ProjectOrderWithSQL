@@ -152,6 +152,26 @@ public class DatabaseRequests implements SqlRequests {
         Connect.session.getTransaction().commit();
     }
 
+    @Override
+    public void outputAllProduct() {
+        System.out.println("in development");
+    }
+
+    @Override
+    public void outputProductOrderedOnce() {
+        System.out.println("in development");
+    }
+
+    @Override
+    public void outputOrderIdDateWithProductPriceNameQuantByOrderId() {
+        System.out.println("in development");
+    }
+
+    @Override
+    public void outputOrdersById() {
+        System.out.println("in development");
+    }
+
     private boolean checkProductStatusToMakeOrder(ProductStatus productStatus) {
         switch (productStatus) {
             case in_stock:
