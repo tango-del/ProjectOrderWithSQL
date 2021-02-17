@@ -7,7 +7,6 @@ import Enums.ProductStatus;
 import Interfaces.SqlRequests;
 import org.hibernate.Query;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -52,7 +51,6 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void createOrder() {
-//        userId = (int) (Math.random() * 50 + 1);
         System.out.println("user id : " + userId);
         scanner = new Scanner(System.in);
 
@@ -65,28 +63,17 @@ public class DatabaseRequests implements SqlRequests {
 
         do {
             System.out.println("choose product id");
-//            Integer pId = scanner.nextInt();
 
             list.add(scanner.nextInt());
 
             System.out.println("want to continue?");
+
             choose = scanner.next();
 
         } while (choose.equalsIgnoreCase("Y"));
 
 
         // проверка каждого id что можно заказать
-
-        /*
-        list.stream().filter(f -> {
-            Connect.session.beginTransaction();
-            query = Connect.session.createQuery("select status from Product where id = " + f);
-            Connect.session.getTransaction().commit();
-            return checkProductStatusToMakeOrder((ProductStatus) query.uniqueResult());
-        }).forEach();
-         */
-
-        System.out.println(list.size() + "list size");
 
         list.removeIf(f -> {
             Connect.session.beginTransaction();
@@ -138,50 +125,31 @@ public class DatabaseRequests implements SqlRequests {
             }
         }
          */
-
-
-//        int productId = scanner.nextInt();
-//
-//        Connect.session.beginTransaction();
-//        query = Connect.session.createQuery("select status from Product where id = " + productId);
-//        Connect.session.getTransaction().commit();
-
-//        boolean result = checkProductStatusToMakeOrder((ProductStatus) query.uniqueResult());
-//
-//        if (result) {
-//            System.out.println("select quantity");
-//            int quantity = scanner.nextInt();
-//            Order order = new Order();
-//            order.setUserId(userId);
-//            order.setStatus("active");
-//            order.setCreatedAt(dateTime);
-//
-//            Connect.session.beginTransaction();
-//            Connect.session.save(order);
-//            Connect.session.getTransaction().commit();
-//
-//            Connect.session.beginTransaction();
-//            query = Connect.session.createQuery("select id from Order where userId = " + userId + " and createdAt = '" + dateTime + "'");
-//            int orderId = (int) query.uniqueResult();
-//            Connect.session.getTransaction().commit();
-//
-//            OrderItems orderItems = new OrderItems();
-////            orderItems.setOrderId(orderId);
-////            orderItems.setProductId(productId);
-//            orderItems.setQuantity(quantity);
-//
-//            Connect.session.beginTransaction();
-//            Connect.session.save(orderItems);
-//            Connect.session.getTransaction().commit();
-//
-//        } else {
-//            System.out.println("This Product OUT OF STOCK");
-//        }
     }
 
     @Override
     public void updateOrderEntryQuantity() {
-        System.out.println("in development");
+        scanner = new Scanner(System.in);
+
+        System.out.println("Choose Order ID:");
+        int orderId = scanner.nextInt();
+
+        System.out.println("Choose Product ID:");
+        int productId = scanner.nextInt();
+
+        Connect.session.beginTransaction();
+        query = Connect.session.createQuery("select quantity from OrderItems where order = " + orderId + " and productId = " + productId);
+        Connect.session.getTransaction().commit();
+
+
+        System.out.println("Current quantity : " + query.uniqueResult() + " set new quantity :");
+        int quantity = scanner.nextInt();
+
+        Connect.session.beginTransaction();
+        query = Connect.session.createQuery("update OrderItems set quantity = " + quantity + " where order = " + orderId + " and productId = " + productId);
+        query.executeUpdate();
+
+        Connect.session.getTransaction().commit();
     }
 
     private boolean checkProductStatusToMakeOrder(ProductStatus productStatus) {
