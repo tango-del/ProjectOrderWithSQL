@@ -54,9 +54,7 @@ public class DatabaseRequests implements SqlRequests {
         System.out.println("user id : " + userId);
         scanner = new Scanner(System.in);
 
-
         // заполняю массив с product id
-
         List<Integer> list = new ArrayList<>();
 
         String choose;
@@ -71,7 +69,6 @@ public class DatabaseRequests implements SqlRequests {
             choose = scanner.next();
 
         } while (choose.equalsIgnoreCase("Y"));
-
 
         // проверка каждого id что можно заказать
 
@@ -155,6 +152,9 @@ public class DatabaseRequests implements SqlRequests {
     @Override
     public void outputAllProduct() {
         System.out.println("in development");
+        Connect.session.beginTransaction();
+        query = Connect.session.createQuery("select name, price, status from Product");
+        Connect.session.getTransaction().commit();
     }
 
     @Override

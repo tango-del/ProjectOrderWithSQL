@@ -47,6 +47,7 @@ public class StartProgram {
                 System.out.println("1 - Output name, price, status for all products");
                 System.out.println("2 - Output products ordered at least once");
                 System.out.println("3 - Output Order id, created date, Product price, name, quantity bu order id");
+                System.out.println("4 - Output all Orders by Id");
                 int outputChoose = scanner.nextInt();
                 switch (outputChoose) {
                     case 1:
@@ -59,10 +60,15 @@ public class StartProgram {
                         requests.outputOrderIdDateWithProductPriceNameQuantByOrderId();
                         break;
                     case 4:
+                        requests.outputOrdersById();
+                        break;
                     default:
+                        // решить с исключением
+                        System.out.println("In development");
                 }
                 break;
             default:
+                // решить с исключением
                 System.out.println("In development");
         }
         scanner.close();
