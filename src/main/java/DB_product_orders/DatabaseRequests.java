@@ -3,6 +3,7 @@ package DB_product_orders;
 import Entities.Order;
 import Entities.OrderItems;
 import Entities.Product;
+import Entities.ProductShort;
 import Enums.ProductStatus;
 import Interfaces.SqlRequests;
 import org.hibernate.Query;
@@ -151,10 +152,12 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void outputAllProduct() {
-        System.out.println("in development");
         Connect.session.beginTransaction();
-        query = Connect.session.createQuery("select name, price, status from Product");
+        query = Connect.session.createQuery("From ProductShort");
         Connect.session.getTransaction().commit();
+        List<ProductShort> productShortList = query.list();
+        productShortList.forEach(System.out::println);
+
     }
 
     @Override

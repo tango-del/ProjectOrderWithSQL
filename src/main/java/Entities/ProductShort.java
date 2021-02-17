@@ -11,9 +11,7 @@ import javax.persistence.*;
 @Table(name = "products")
 @Setter
 @Getter
-@ToString
-public class Product {
-//public class Product extends ProductShort {
+public class ProductShort {
 
     @Id
     @GeneratedValue
@@ -30,9 +28,9 @@ public class Product {
     @Column(name = "status")
     private ProductStatus status;
 
-    @Column(name = "created_at")
-    private String dataCreate;
-
-    public Product() {
+    //outputAllProduct
+    @Override
+    public String toString() {
+        return "|Name: " + name + " | Price: " + price + " | Status: " + status;
     }
 }
