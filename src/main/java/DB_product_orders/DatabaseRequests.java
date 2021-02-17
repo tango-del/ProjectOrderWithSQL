@@ -139,25 +139,32 @@ public class DatabaseRequests implements SqlRequests {
         query = Connect.session.createQuery("select quantity from OrderItems where order = " + orderId + " and productId = " + productId);
         Connect.session.getTransaction().commit();
 
-
         System.out.println("Current quantity : " + query.uniqueResult() + " set new quantity :");
         int quantity = scanner.nextInt();
 
         Connect.session.beginTransaction();
         query = Connect.session.createQuery("update OrderItems set quantity = " + quantity + " where order = " + orderId + " and productId = " + productId);
-        query.executeUpdate();
+        query.executeUpdate(); // отправить запрос в БД
 
         Connect.session.getTransaction().commit();
     }
 
     @Override
     public void outputAllProduct() {
+        /*
+         TODO спросить как лучше использовать вывод конкретных колонок
+          ProductShort с нужными колонками или сохранять все данные из Product и выводить нужные поля
+         */
         Connect.session.beginTransaction();
-        query = Connect.session.createQuery("From ProductShort");
+//        query = Connect.session.createQuery("From ProductShort");
+        query = Connect.session.createQuery("From Product");
         Connect.session.getTransaction().commit();
-        List<ProductShort> productShortList = query.list();
-        productShortList.forEach(System.out::println);
-
+//        List<ProductShort> productShortList = query.list();
+//        productShortList.forEach(System.out::println);
+        List<Product> productList = query.list();
+        productList.forEach(f -> {
+            System.out.println("|Name: " + f.getName() + " | Price: " + f.getPrice() + " | Status: " + f.getStatus());
+        });
     }
 
     @Override
