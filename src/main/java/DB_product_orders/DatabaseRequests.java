@@ -113,6 +113,7 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void updateOrderEntryQuantity() {
+        // TODO не работает с OrderItems - private Product product;
         scanner = new Scanner(System.in);
 
         System.out.println("Choose Order ID:");
@@ -155,25 +156,39 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void outputProductOrderedOnce() {
+        /*
+        SQL query
+        select p.*, sum(oi.quantity) from products p
+        inner join order_items oi on p.id = oi.product_id
+        group by oi.product_id
+        order by sum(oi.quantity) desc;
+         */
         String qr = "select p, sum(quantity) from Product p inner join OrderItems on id = productId group by productId order by sum(quantity) desc";
+        String qr4 = "from Product p join";
+        String qr5 = "sum(quantity) from Product p join p.orderItemsSet oi group by oi.product order by sum(quantity) desc";
         String qr2 = "select p from Product p where p.id IN (select oi.productId from OrderItems oi)";
-        String qr3 = "select p, oi from OrderItems oi join oi.product p";
+        String qr3 = "select p from Product p";
+
         Connect.session.beginTransaction();
-//        query = Connect.session.createQuery(qr);
-        query = Connect.session.createQuery(qr3);
+
+        query = Connect.session.createQuery(qr4);
+
         System.out.println(query.list().size());
 
+        List<Product> list = query.list();
+        list.forEach(System.out::println);
 
 
 //        List<Object[]> list = query.list();
 //        list.forEach(f -> {
-//            Product product = (Product) f[0];
-//            int sum = (int) f[1];
+////            Product product = (Product) f[0];
+////            int sum = (int) f[1];
 //            for (Object o : f) {
 //                System.out.println(o);
 //            }
 //
 //        });
+
 
         Connect.session.getTransaction().commit();
     }

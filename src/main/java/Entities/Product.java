@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,9 +36,9 @@ public class Product {
     @Column(name = "created_at")
     private String dataCreate;
 
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 //    @JoinColumn(name = "product_id")
-//    private Set<OrderItems> orderItemsSet;
+    private List<OrderItems> orderItemsSet = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 ////    @ManyToOne
