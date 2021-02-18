@@ -13,12 +13,25 @@ import java.util.Scanner;
 
 public class StartProgram {
     public static Scanner scanner;
+    static Session session;
 
     public static void main(String[] args) {
-        Session session = Connect.getSession(); // create connection
+        try {
+        session = Connect.getSession(); // create connection
 
         init();
-        session.close();
+
+        } catch(Exception sqlException) {
+            if(null != session.getTransaction()) {
+                System.out.println("\n.......Transaction Is Being Rolled Back.......");
+                session.getTransaction().rollback();
+            }
+            sqlException.printStackTrace();
+        } finally {
+            if(session != null) {
+                Connect.closeSession();
+            }
+        }
     }
 
     public static void init() {

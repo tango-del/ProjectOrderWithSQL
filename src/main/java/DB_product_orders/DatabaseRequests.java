@@ -157,16 +157,21 @@ public class DatabaseRequests implements SqlRequests {
     public void outputProductOrderedOnce() {
         String qr = "select p, sum(quantity) from Product p inner join OrderItems on id = productId group by productId order by sum(quantity) desc";
         String qr2 = "select p from Product p where p.id IN (select oi.productId from OrderItems oi)";
-        String qr3 = "select p, sum(OrderItems.quantity) from Product p inner join OrderItems oi on Product.id = OrderItems.productId group by productId order by sum(OrderItems.quantity) desc";
+        String qr3 = "select p, oi from OrderItems oi join oi.product p";
         Connect.session.beginTransaction();
 //        query = Connect.session.createQuery(qr);
         query = Connect.session.createQuery(qr3);
         System.out.println(query.list().size());
-//
+
+
+
 //        List<Object[]> list = query.list();
 //        list.forEach(f -> {
 //            Product product = (Product) f[0];
 //            int sum = (int) f[1];
+//            for (Object o : f) {
+//                System.out.println(o);
+//            }
 //
 //        });
 
