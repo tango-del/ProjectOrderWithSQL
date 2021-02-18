@@ -74,38 +74,4 @@ public class StartProgram {
         }
         scanner.close();
     }
-
-    public static void testCreateOrder() {
-        Session session = Connect.getSession(); // create connection
-        session.beginTransaction();
-
-        Order order = new Order();
-        order.setUserId(3532);
-        order.setStatus("active");
-
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String dateTime = currentDateTime.format(formatter);
-
-        order.setCreatedAt(dateTime);
-
-        session.save(order);
-
-        OrderItems orderItems1 = new OrderItems();
-//        orderItems1.setProductId(46);
-        orderItems1.setQuantity(14);
-        orderItems1.setOrder(order);
-
-        session.save(orderItems1);
-
-        OrderItems orderItems2 = new OrderItems();
-//        orderItems2.setProductId(45);
-        orderItems2.setQuantity(2);
-        orderItems2.setOrder(order);
-
-        session.save(orderItems2);
-
-        session.getTransaction().commit();
-//        session.close();
-    }
 }

@@ -89,23 +89,14 @@ public class DatabaseRequests implements SqlRequests {
             order1.setCreatedAt(dateTime);
 
             Connect.session.beginTransaction();
-
             Connect.session.save(order1);
-
-//            Connect.session.getTransaction().commit();
 
             list.forEach(f -> {
                 OrderItems orderItems = new OrderItems();
-//                orderItems.setProductId(f);
-//                Connect.session.beginTransaction();
 
                 query = Connect.session.createQuery("from Product where id = " + f);
 
                 orderItems.setProduct((Product) query.uniqueResult());
-
-//                Connect.session.getTransaction().commit();
-
-
 
                 System.out.println("Set product id " + f + " quantity");
                 int quantity = scanner.nextInt();
@@ -113,31 +104,11 @@ public class DatabaseRequests implements SqlRequests {
                 orderItems.setQuantity(quantity);
                 orderItems.setOrder(order1);
 
-//                Connect.session.beginTransaction();
-
                 Connect.session.save(orderItems);
 
-//                Connect.session.getTransaction().commit();
             });
             Connect.session.getTransaction().commit();
         }
-
-        /*
-        System.out.println("Input Products ID by Space");
-
-        String userChoose = scanner.nextLine();
-
-        String[] productsId = userChoose.split(" ", 0);
-
-        Arrays.stream(productsId).filter(f -> f.chars().allMatch(Character::isDigit)).
-
-        for (String str : productsId) {
-
-            if (str.chars().allMatch(Character::isDigit)){
-
-            }
-        }
-         */
     }
 
     @Override
