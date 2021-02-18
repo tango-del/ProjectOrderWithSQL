@@ -92,9 +92,20 @@ public class DatabaseRequests implements SqlRequests {
 
             Connect.session.save(order1);
 
+//            Connect.session.getTransaction().commit();
+
             list.forEach(f -> {
                 OrderItems orderItems = new OrderItems();
-                orderItems.setProductId(f);
+//                orderItems.setProductId(f);
+//                Connect.session.beginTransaction();
+
+                query = Connect.session.createQuery("from Product where id = " + f);
+
+                orderItems.setProduct((Product) query.uniqueResult());
+
+//                Connect.session.getTransaction().commit();
+
+
 
                 System.out.println("Set product id " + f + " quantity");
                 int quantity = scanner.nextInt();
@@ -102,7 +113,11 @@ public class DatabaseRequests implements SqlRequests {
                 orderItems.setQuantity(quantity);
                 orderItems.setOrder(order1);
 
+//                Connect.session.beginTransaction();
+
                 Connect.session.save(orderItems);
+
+//                Connect.session.getTransaction().commit();
             });
             Connect.session.getTransaction().commit();
         }
@@ -169,7 +184,22 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void outputProductOrderedOnce() {
-        System.out.println("in development");
+        String qr = "select p, sum(quantity) from Product p inner join OrderItems on id = productId group by productId order by sum(quantity) desc";
+        String qr2 = "select p from Product p where p.id IN (select oi.productId from OrderItems oi)";
+        String qr3 = "select p, sum(OrderItems.quantity) from Product p inner join OrderItems oi on Product.id = OrderItems.productId group by productId order by sum(OrderItems.quantity) desc";
+        Connect.session.beginTransaction();
+//        query = Connect.session.createQuery(qr);
+        query = Connect.session.createQuery(qr3);
+        System.out.println(query.list().size());
+//
+//        List<Object[]> list = query.list();
+//        list.forEach(f -> {
+//            Product product = (Product) f[0];
+//            int sum = (int) f[1];
+//
+//        });
+
+        Connect.session.getTransaction().commit();
     }
 
     @Override

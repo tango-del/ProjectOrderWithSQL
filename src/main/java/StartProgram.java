@@ -2,6 +2,7 @@ import DB_product_orders.Connect;
 import DB_product_orders.DatabaseRequests;
 import Entities.Order;
 import Entities.OrderItems;
+import Entities.Product;
 import Enums.ProductStatus;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -88,23 +89,23 @@ public class StartProgram {
 
         order.setCreatedAt(dateTime);
 
-//        session.save(order);
+        session.save(order);
 
         OrderItems orderItems1 = new OrderItems();
-        orderItems1.setProductId(12);
+//        orderItems1.setProductId(46);
         orderItems1.setQuantity(14);
         orderItems1.setOrder(order);
 
-//        session.save(orderItems1);
+        session.save(orderItems1);
 
         OrderItems orderItems2 = new OrderItems();
-        orderItems2.setProductId(14);
+//        orderItems2.setProductId(45);
         orderItems2.setQuantity(2);
         orderItems2.setOrder(order);
 
-//        session.save(orderItems2);
+        session.save(orderItems2);
 
         session.getTransaction().commit();
-        session.close();
+//        session.close();
     }
 }

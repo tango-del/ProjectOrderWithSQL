@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -32,6 +33,11 @@ public class Product {
 
     @Column(name = "created_at")
     private String dataCreate;
+
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+////    @ManyToOne
+////    @JoinColumn(name = "")
+//    private Set<OrderItems> orderItemsSet;
 
     public Product() {
     }
