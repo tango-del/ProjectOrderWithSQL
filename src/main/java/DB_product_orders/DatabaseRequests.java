@@ -3,7 +3,6 @@ package DB_product_orders;
 import Entities.Order;
 import Entities.OrderItems;
 import Entities.Product;
-import Entities.ProductShort;
 import Enums.ProductStatus;
 import Interfaces.SqlRequests;
 import org.hibernate.Query;
@@ -25,7 +24,7 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void createRawProduct() {
-        Product testProduct = new Product();
+        Product rawProduct = new Product();
 
         scanner = new Scanner(System.in);
 
@@ -38,15 +37,15 @@ public class DatabaseRequests implements SqlRequests {
         System.out.println("Choose Product Status");
         ProductStatus userChooseProductStatus = chooseProductStatus();
 
-        testProduct.setPrice(productPrice);
-        testProduct.setName(name);
-        testProduct.setStatus(userChooseProductStatus);
-        testProduct.setDataCreate(dateTime);
+        rawProduct.setPrice(productPrice);
+        rawProduct.setName(name);
+        rawProduct.setStatus(userChooseProductStatus);
+        rawProduct.setDataCreate(dateTime);
 
         scanner.close();
 
         Connect.session.beginTransaction();
-        Connect.session.save(testProduct);
+        Connect.session.save(rawProduct);
         Connect.session.getTransaction().commit();
     }
 
@@ -85,7 +84,7 @@ public class DatabaseRequests implements SqlRequests {
         if (!list.isEmpty()) {
             Order order1 = new Order();
             order1.setUserId(userId);
-            order1.setStatus("active");
+            order1.setStatus("open");
             order1.setCreatedAt(dateTime);
 
             Connect.session.beginTransaction();
@@ -113,7 +112,6 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void updateOrderEntryQuantity() {
-        // TODO не работает с OrderItems - private Product product;
         scanner = new Scanner(System.in);
 
         System.out.println("Choose Order ID:");
@@ -123,15 +121,18 @@ public class DatabaseRequests implements SqlRequests {
         int productId = scanner.nextInt();
 
         Connect.session.beginTransaction();
-        query = Connect.session.createQuery("select quantity from OrderItems where order = " + orderId + " and productId = " + productId);
-        Connect.session.getTransaction().commit();
 
-        System.out.println("Current quantity : " + query.uniqueResult() + " set new quantity :");
+        query = Connect.session.createQuery("from OrderItems where order = " + orderId + " and product = " + productId);
+        // если возвращает несколько сущностей по указанному запросу то берём первую сущность в list
+        OrderItems orderItems = (OrderItems) query.list().get(0);
+
+        System.out.println("Current quantity : " + orderItems.getQuantity() + " set new quantity :");
+
         int quantity = scanner.nextInt();
 
-        Connect.session.beginTransaction();
-        query = Connect.session.createQuery("update OrderItems set quantity = " + quantity + " where order = " + orderId + " and productId = " + productId);
-        query.executeUpdate(); // отправить запрос в БД
+        orderItems.setQuantity(quantity);
+
+        Connect.session.saveOrUpdate(orderItems);
 
         Connect.session.getTransaction().commit();
     }
@@ -206,8 +207,11 @@ public class DatabaseRequests implements SqlRequests {
     private boolean checkProductStatusToMakeOrder(ProductStatus productStatus) {
         switch (productStatus) {
             case in_stock:
-            case running_low: return true;
-            default: return false;
+            case running_low:
+                return true;
+            default:
+//                System.out.println("This Product out of stock. You can`t make order for him");
+                return false;
         }
     }
 
