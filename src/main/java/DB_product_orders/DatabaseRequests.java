@@ -163,33 +163,25 @@ public class DatabaseRequests implements SqlRequests {
         inner join order_items oi on p.id = oi.product_id
         group by oi.product_id
         order by sum(oi.quantity) desc;
-         */
-        String qr = "select p, sum(quantity) from Product p inner join OrderItems on id = productId group by productId order by sum(quantity) desc";
-        String qr4 = "from Product p join";
-        String qr5 = "sum(quantity) from Product p join p.orderItemsSet oi group by oi.product order by sum(quantity) desc";
-        String qr2 = "select p from Product p where p.id IN (select oi.productId from OrderItems oi)";
-        String qr3 = "select p from Product p";
 
+        Hibernate query
+        select p, sum(oi.quantity) from Product p
+        join p.orderItemsSet oi
+        group by oi.product
+        order by sum(oi.quantity) desc
+         */
         Connect.session.beginTransaction();
 
-        query = Connect.session.createQuery(qr4);
+        Query query = Connect.session.createQuery("select p, sum(oi.quantity) from Product p join p.orderItemsSet oi group by oi.product order by sum(oi.quantity) desc");
 
         System.out.println(query.list().size());
 
-        List<Product> list = query.list();
-        list.forEach(System.out::println);
+        List<Object[]> list = query.list();
+        list.forEach(f -> {
+            Product product = (Product) f[0];
 
-
-//        List<Object[]> list = query.list();
-//        list.forEach(f -> {
-////            Product product = (Product) f[0];
-////            int sum = (int) f[1];
-//            for (Object o : f) {
-//                System.out.println(o);
-//            }
-//
-//        });
-
+            System.out.println("|ID: " + product.getId() + " | Name: " + product.getName() + " | Price: " + product.getPrice() + " | Total Quantities: " + f[1]);
+        });
 
         Connect.session.getTransaction().commit();
     }

@@ -39,14 +39,7 @@ public class Product {
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-//    @JoinColumn(name = "product_id")
-    private Set<OrderItems> orderItemsSet;
-
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-////    @ManyToOne
-////    @JoinColumn(name = "")
-//    private Set<OrderItems> orderItemsSet;
-
+    private List<OrderItems> orderItemsSet;
 
     @Override
     public String toString() {

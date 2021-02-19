@@ -1,14 +1,7 @@
 import DB_product_orders.Connect;
 import DB_product_orders.DatabaseRequests;
-import Entities.Order;
-import Entities.OrderItems;
-import Entities.Product;
-import Enums.ProductStatus;
-import org.hibernate.Query;
 import org.hibernate.Session;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class StartProgram {
