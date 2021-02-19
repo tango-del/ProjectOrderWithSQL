@@ -4,6 +4,7 @@ import Enums.ProductStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,9 +15,7 @@ import java.util.Set;
 @Table(name = "products")
 @Setter
 @Getter
-@ToString
 public class Product {
-//public class Product extends ProductShort {
 
     @Id
     @GeneratedValue
@@ -36,15 +35,28 @@ public class Product {
     @Column(name = "created_at")
     private String dataCreate;
 
+    @Column(name = "isDeleted")
+    private boolean isDeleted;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 //    @JoinColumn(name = "product_id")
-    private List<OrderItems> orderItemsSet = new ArrayList<>();
+    private Set<OrderItems> orderItemsSet;
 
 //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 ////    @ManyToOne
 ////    @JoinColumn(name = "")
 //    private Set<OrderItems> orderItemsSet;
 
-    public Product() {
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", status=" + status +
+                ", dataCreate='" + dataCreate + '\'' +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }

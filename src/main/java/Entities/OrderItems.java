@@ -10,18 +10,17 @@ import javax.persistence.*;
 @Table(name = "order_items")
 @Setter
 @Getter
-@ToString
 public class OrderItems {
 
-//    @Id
-//    @Column(name = "product_id")
-//    private int productId;
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Id
     @Column(name = "quantity")
     private int quantity;
 
@@ -29,6 +28,13 @@ public class OrderItems {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    public OrderItems() {
+    @Override
+    public String toString() {
+        return "OrderItems{" +
+                "id=" + id +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                ", order=" + order +
+                '}';
     }
 }
