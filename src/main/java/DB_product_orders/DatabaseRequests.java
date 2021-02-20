@@ -7,6 +7,7 @@ import Enums.ProductStatus;
 import Interfaces.SqlRequests;
 import org.hibernate.Query;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -144,11 +145,8 @@ public class DatabaseRequests implements SqlRequests {
           ProductShort с нужными колонками или сохранять все данные из Product и выводить нужные поля
          */
         Connect.session.beginTransaction();
-//        query = Connect.session.createQuery("From ProductShort");
         query = Connect.session.createQuery("From Product");
         Connect.session.getTransaction().commit();
-//        List<ProductShort> productShortList = query.list();
-//        productShortList.forEach(System.out::println);
         List<Product> productList = query.list();
         productList.forEach(f -> {
             System.out.println("|Name: " + f.getName() + " | Price: " + f.getPrice() + " | Status: " + f.getStatus());
@@ -172,7 +170,7 @@ public class DatabaseRequests implements SqlRequests {
          */
         Connect.session.beginTransaction();
 
-        Query query = Connect.session.createQuery("select p, sum(oi.quantity) from Product p join p.orderItemsSet oi group by oi.product order by sum(oi.quantity) desc");
+        Query query = Connect.session.createQuery("select p, sum(oi.quantity) from Product p join p.orderItemsList oi group by oi.product order by sum(oi.quantity) desc");
 
         System.out.println(query.list().size());
 
@@ -188,12 +186,69 @@ public class DatabaseRequests implements SqlRequests {
 
     @Override
     public void outputOrderIdDateWithProductPriceNameQuantByOrderId() {
-        System.out.println("in development");
+        /*
+        select o.id,
+               oi.quantity * p.price as total_price,
+               p.name,
+               oi.quantity,
+               o.created_at
+        from orders o
+        left join order_items oi on o.id = oi.order_id
+        left join products p on oi.product_id = p.id
+        where o.id = 24;
+         */
+        scanner = new Scanner(System.in);
+
+        Connect.session.beginTransaction();
+
+        System.out.println("Choose Order ID:");
+
+        int orderId = scanner.nextInt();
+
+        scanner.close();
+
+        // TODO почему только один join, и почему не нужно указывать какой именно join
+        String q1 = "select o.id, oi.quantity * oi.product.price, oi.product.name, oi.quantity, o.createdAt from Order o " +
+                "join o.orderItems oi " +
+                "where o.id = " + orderId;
+
+        query = Connect.session.createQuery(q1);
+
+        Connect.session.getTransaction().commit();
+
+        List<Object[]> list = query.list();
+        list.forEach(f -> {
+            System.out.println("|ID: " + f[0] + " |Total Price: " + f[1] + " |Product Name: " + f[2] + " |Quantity: " + f[3] + " |Order Created at: " + f[4]);
+        });
     }
 
     @Override
     public void outputOrdersById() {
-        System.out.println("in development");
+        /*
+        select o.id,
+               oi.quantity * p.price as total_price,
+               p.name,
+               oi.quantity,
+               o.created_at
+        from orders o
+        inner join order_items oi on o.id = oi.order_id
+        left join products p on oi.product_id = p.id
+        order by o.id;
+         */
+        Connect.session.beginTransaction();
+
+        String q1 = "select o.id, oi.quantity * oi.product.price, oi.product.name, oi.quantity, o.createdAt from Order o " +
+                "join o.orderItems oi " +
+                "order by o.id";
+
+        query = Connect.session.createQuery(q1);
+
+        List<Object[]> list = query.list();
+        list.forEach(f -> {
+            System.out.println("|ID: " + f[0] + " |Total Price: " + f[1] + " |Product Name: " + f[2] + " |Quantity: " + f[3] + " |Order Created at: " + f[4]);
+        });
+
+        Connect.session.getTransaction().commit();
     }
 
     private boolean checkProductStatusToMakeOrder(ProductStatus productStatus) {

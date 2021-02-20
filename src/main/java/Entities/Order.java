@@ -2,10 +2,9 @@ package Entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -28,7 +27,7 @@ public class Order {
     private String createdAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private Set<OrderItems> orderItems;
+    private List<OrderItems> orderItems;
 
     @Override
     public String toString() {

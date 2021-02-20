@@ -2,6 +2,9 @@ import DB_product_orders.Connect;
 import DB_product_orders.DatabaseRequests;
 import org.hibernate.Session;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class StartProgram {
@@ -12,6 +15,7 @@ public class StartProgram {
         try {
         session = Connect.getSession(); // create connection
 
+//            test();
         init();
 
         } catch(Exception sqlException) {
@@ -79,5 +83,19 @@ public class StartProgram {
                 System.out.println("In development");
         }
         scanner.close();
+    }
+
+    public static void test() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // форматирует локальную дату по указанным ключам
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // отформатированное время по указанному паттерну
+        String dateTime = currentDateTime.format(formatter);
+
+        System.out.println(dateTime);
+
+        String[] aa = dateTime.split(":", 0);
+        System.out.println(aa[0] + ":" + aa[1]);
     }
 }

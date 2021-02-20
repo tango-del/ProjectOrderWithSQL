@@ -3,13 +3,9 @@ package Entities;
 import Enums.ProductStatus;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -39,7 +35,7 @@ public class Product {
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<OrderItems> orderItemsSet;
+    private List<OrderItems> orderItemsList;
 
     @Override
     public String toString() {
