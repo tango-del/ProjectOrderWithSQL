@@ -33,12 +33,5 @@ public class Connect {
         // Creating Hibernate SessionFactory Instance
         sessionFactoryObj = configObj.buildSessionFactory(serviceRegistryObj);
         return sessionFactoryObj;
-//        try {
-//            // read config xml file
-//            return new Configuration().configure().buildSessionFactory();
-//        } catch (Throwable e) {
-//            System.out.println("SessionFactory creation failed: " + e);
-//            throw new ExceptionInInitializerError(e);
-//        }
     }
 }

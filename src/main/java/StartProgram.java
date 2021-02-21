@@ -4,7 +4,6 @@ import org.hibernate.Session;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class StartProgram {

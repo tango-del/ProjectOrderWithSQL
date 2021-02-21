@@ -7,7 +7,6 @@ import Enums.ProductStatus;
 import Interfaces.SqlRequests;
 import org.hibernate.Query;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -170,7 +169,12 @@ public class DatabaseRequests implements SqlRequests {
          */
         Connect.session.beginTransaction();
 
-        Query query = Connect.session.createQuery("select p, sum(oi.quantity) from Product p join p.orderItemsList oi group by oi.product order by sum(oi.quantity) desc");
+        String qr = "select p, sum(oi.quantity) from Product p " +
+                "join p.orderItemsList oi " +
+                "group by oi.product " +
+                "order by sum(oi.quantity) desc";
+
+        Query query = Connect.session.createQuery(qr);
 
         System.out.println(query.list().size());
 
@@ -268,7 +272,7 @@ public class DatabaseRequests implements SqlRequests {
 
         Connect.session.saveOrUpdate(product);
 
-        // TODO удалить ли сущности order_items
+        // TODO удалить ли сущности order_items с указанным Product ID
 //        query = Connect.session.createQuery("delete from OrderItems where product = " + productId);
 //        query.executeUpdate();
 
@@ -279,6 +283,7 @@ public class DatabaseRequests implements SqlRequests {
     public void removeAllProducts() {
         Connect.session.beginTransaction();
 
+        // TODO запрос SQL требует подтверждение действия, Hibernate не требует
         query = Connect.session.createQuery("update Product set isDeleted = false");
 
         query.executeUpdate();
