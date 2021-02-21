@@ -2,8 +2,6 @@ import DB_product_orders.Connect;
 import DB_product_orders.DatabaseRequests;
 import org.hibernate.Session;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class StartProgram {
@@ -74,7 +72,8 @@ public class StartProgram {
                         break;
                     default:
                         // решить с исключением
-                        System.out.println("In development");
+                        throw new RuntimeException("Incorrect Output operation number. Choose between 1 - 4");
+//                        System.out.println("In development");
                 }
                 break;
             case 5:
@@ -90,12 +89,13 @@ public class StartProgram {
                         break;
                     default:
                         // решить с исключением
-                        System.out.println("123In development");
+                        throw new RuntimeException("Incorrect Remove operation number. Choose between 1 - 2");
                 }
                 break;
             default:
                 // решить с исключением
-                System.out.println("fesIn development");
+                throw new RuntimeException("Incorrect operation number. Choose between 1 - 5");
+//                System.out.println("In development");
         }
         scanner.close();
     }
