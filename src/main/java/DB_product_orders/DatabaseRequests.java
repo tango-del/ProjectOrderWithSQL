@@ -251,6 +251,40 @@ public class DatabaseRequests implements SqlRequests {
         Connect.session.getTransaction().commit();
     }
 
+    @Override
+    public void removeProductById() {
+        Connect.session.beginTransaction();
+
+        scanner = new Scanner(System.in);
+
+        System.out.println("choose Product ID:");
+        int productId = scanner.nextInt();
+
+        query = Connect.session.createQuery("from Product where id = " + productId);
+
+        Product product = (Product) query.uniqueResult();
+
+        product.setDeleted(true);
+
+        Connect.session.saveOrUpdate(product);
+
+        // TODO удалить ли сущности order_items
+//        query = Connect.session.createQuery("delete from OrderItems where product = " + productId);
+//        query.executeUpdate();
+
+        Connect.session.getTransaction().commit();
+    }
+
+    @Override
+    public void removeAllProducts() {
+        Connect.session.beginTransaction();
+
+        query = Connect.session.createQuery("update Product set isDeleted = false");
+
+        query.executeUpdate();
+        Connect.session.getTransaction().commit();
+    }
+
     private boolean checkProductStatusToMakeOrder(ProductStatus productStatus) {
         switch (productStatus) {
             case in_stock:

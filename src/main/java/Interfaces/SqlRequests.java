@@ -8,4 +8,6 @@ public interface SqlRequests {
     void outputProductOrderedOnce();
     void outputOrderIdDateWithProductPriceNameQuantByOrderId();
     void outputOrdersById();
+    void removeProductById();
+    void removeAllProducts();
 }

@@ -13,19 +13,18 @@ public class StartProgram {
 
     public static void main(String[] args) {
         try {
-        session = Connect.getSession(); // create connection
+            session = Connect.getSession(); // create connection
 
-//            test();
-        init();
+            init();
 
-        } catch(Exception sqlException) {
-            if(null != session.getTransaction()) {
+        } catch (Exception sqlException) {
+            if (null != session.getTransaction()) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......");
                 session.getTransaction().rollback();
             }
             sqlException.printStackTrace();
         } finally {
-            if(session != null) {
+            if (session != null) {
                 Connect.closeSession();
             }
         }
@@ -37,6 +36,7 @@ public class StartProgram {
         System.out.println("2 - Create Order");
         System.out.println("3 - Update Order quantities");
         System.out.println("4 - Output commands:");
+        System.out.println("5 - Remove Product by ID or All Products");
 
         scanner = new Scanner(System.in);
 
@@ -78,9 +78,25 @@ public class StartProgram {
                         System.out.println("In development");
                 }
                 break;
+            case 5:
+                System.out.println("1 - Remove Product by ID");
+                System.out.println("2 - Remove All Products by DB password");
+                int removeChoose = scanner.nextInt();
+                switch (removeChoose) {
+                    case 1:
+                        requests.removeProductById();
+                        break;
+                    case 2:
+                        requests.removeAllProducts();
+                        break;
+                    default:
+                        // решить с исключением
+                        System.out.println("123In development");
+                }
+                break;
             default:
                 // решить с исключением
-                System.out.println("In development");
+                System.out.println("fesIn development");
         }
         scanner.close();
     }
