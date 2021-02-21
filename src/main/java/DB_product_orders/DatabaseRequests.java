@@ -145,6 +145,7 @@ public class DatabaseRequests implements SqlRequests {
          */
         Connect.session.beginTransaction();
         query = Connect.session.createQuery("From Product");
+//        query = Connect.session.createQuery("select * From Product");
         Connect.session.getTransaction().commit();
         List<Product> productList = query.list();
         productList.forEach(f -> {
@@ -291,10 +292,29 @@ public class DatabaseRequests implements SqlRequests {
     public void removeAllProducts() {
         Connect.session.beginTransaction();
 
-        // TODO запрос SQL требует подтверждение действия, Hibernate не требует
-        query = Connect.session.createQuery("update Product set isDeleted = false");
+        scanner = new Scanner(System.in);
 
-        query.executeUpdate();
+        System.out.println("Please enter DB password:");
+
+        String pass = scanner.nextLine();
+
+        if (Connect.prop.getProperty("hibernate.connection.password").equals(pass)) {
+
+            System.out.println("Confirm to delete all Products: Y / N");
+            String confirm = scanner.nextLine();
+            if (confirm.equalsIgnoreCase("y")) {
+                // TODO запрос SQL требует подтверждение действия, Hibernate не требует
+                query = Connect.session.createQuery("update Product set isDeleted = true");
+
+                query.executeUpdate();
+                System.out.println("Deleted successfully");
+            } else {
+                System.out.println("You canceled deletion");
+            }
+        } else {
+            System.out.println("Wrong Password");
+        }
+
         Connect.session.getTransaction().commit();
     }
 
@@ -304,7 +324,6 @@ public class DatabaseRequests implements SqlRequests {
             case running_low:
                 return true;
             default:
-//                System.out.println("This Product out of stock. You can`t make order for him");
                 return false;
         }
     }

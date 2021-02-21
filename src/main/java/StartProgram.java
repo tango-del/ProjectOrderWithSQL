@@ -2,6 +2,7 @@ import DB_product_orders.Connect;
 import DB_product_orders.DatabaseRequests;
 import org.hibernate.Session;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class StartProgram {
@@ -14,12 +15,16 @@ public class StartProgram {
 
             init();
 
+        } catch (InputMismatchException e) {
+            e.printStackTrace();
+
         } catch (Exception sqlException) {
             if (null != session.getTransaction()) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......");
                 session.getTransaction().rollback();
             }
             sqlException.printStackTrace();
+
         } finally {
             if (session != null) {
                 Connect.closeSession();
@@ -37,65 +42,64 @@ public class StartProgram {
 
         scanner = new Scanner(System.in);
 
-        int userChoose = scanner.nextInt();
+        String userChoose = scanner.nextLine();
 
         DatabaseRequests requests = new DatabaseRequests();
 
         switch (userChoose) {
-            case 1:
+            case "1":
                 requests.createRawProduct();
                 break;
-            case 2:
+            case "2":
                 requests.createOrder();
                 break;
-            case 3:
+            case "3":
                 requests.updateOrderEntryQuantity();
                 break;
-            case 4:
+            case "4":
                 System.out.println("1 - Output name, price, status for all products");
                 System.out.println("2 - Output products ordered at least once");
                 System.out.println("3 - Output Order id, created date, Product price, name, quantity bu order id");
                 System.out.println("4 - Output all Orders by Id");
-                int outputChoose = scanner.nextInt();
+
+                String outputChoose = scanner.nextLine();
+
                 switch (outputChoose) {
-                    case 1:
+                    case "1":
                         requests.outputAllProduct();
                         break;
-                    case 2:
+                    case "2":
                         requests.outputProductOrderedOnce();
                         break;
-                    case 3:
+                    case "3":
                         requests.outputOrderIdDateWithProductPriceNameQuantByOrderId();
                         break;
-                    case 4:
+                    case "4":
                         requests.outputOrdersById();
                         break;
                     default:
-                        // решить с исключением
-                        throw new RuntimeException("Incorrect Output operation number. Choose between 1 - 4");
-//                        System.out.println("In development");
+                        throw new InputMismatchException("Incorrect Output operation number. Choose between 1 - 4");
                 }
                 break;
-            case 5:
+            case "5":
                 System.out.println("1 - Remove Product by ID");
                 System.out.println("2 - Remove All Products by DB password");
-                int removeChoose = scanner.nextInt();
+
+                String removeChoose = scanner.nextLine();
+
                 switch (removeChoose) {
-                    case 1:
+                    case "1":
                         requests.removeProductById();
                         break;
-                    case 2:
+                    case "2":
                         requests.removeAllProducts();
                         break;
                     default:
-                        // решить с исключением
-                        throw new RuntimeException("Incorrect Remove operation number. Choose between 1 - 2");
+                        throw new InputMismatchException("Incorrect Remove operation number. Choose between 1 - 2");
                 }
                 break;
             default:
-                // решить с исключением
-                throw new RuntimeException("Incorrect operation number. Choose between 1 - 5");
-//                System.out.println("In development");
+                throw new InputMismatchException("Incorrect operation number. Choose between 1 - 5");
         }
         scanner.close();
     }
