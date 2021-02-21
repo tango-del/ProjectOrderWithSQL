@@ -18,7 +18,7 @@ public class DatabaseRequests implements SqlRequests {
     // хранит полную локальную дату времени компьютера
     private static final LocalDateTime currentDateTime = LocalDateTime.now();
     // форматирует локальную дату по указанным ключам
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     // отформатированное время по указанному паттерну
     private static final String dateTime = currentDateTime.format(formatter);
 
@@ -212,7 +212,13 @@ public class DatabaseRequests implements SqlRequests {
         scanner.close();
 
         // TODO почему только один join, и почему не нужно указывать какой именно join
-        String q1 = "select o.id, oi.quantity * oi.product.price, oi.product.name, oi.quantity, o.createdAt from Order o " +
+//        String q1 = "select o.id, oi.quantity * oi.product.price, oi.product.name, oi.quantity, o.createdAt from Order o " +
+//                "join o.orderItems oi " +
+//                "where o.id = " + orderId;
+
+        String q1 = "select o.id, oi.quantity * oi.product.price, oi.product.name, oi.quantity, " +
+                "DATE_FORMAT(o.createdAt, '%Y-%m-%d %H:%i') " +
+                "from Order o " +
                 "join o.orderItems oi " +
                 "where o.id = " + orderId;
 
@@ -241,7 +247,9 @@ public class DatabaseRequests implements SqlRequests {
          */
         Connect.session.beginTransaction();
 
-        String q1 = "select o.id, oi.quantity * oi.product.price, oi.product.name, oi.quantity, o.createdAt from Order o " +
+        String q1 = "select o.id, oi.quantity * oi.product.price, oi.product.name, oi.quantity, " +
+                "DATE_FORMAT(o.createdAt, '%Y-%m-%d %H:%i') " +
+                "from Order o " +
                 "join o.orderItems oi " +
                 "order by o.id";
 

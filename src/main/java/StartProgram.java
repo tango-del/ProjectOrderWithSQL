@@ -99,18 +99,4 @@ public class StartProgram {
         }
         scanner.close();
     }
-
-    public static void test() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-
-        // форматирует локальную дату по указанным ключам
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        // отформатированное время по указанному паттерну
-        String dateTime = currentDateTime.format(formatter);
-
-        System.out.println(dateTime);
-
-        String[] aa = dateTime.split(":", 0);
-        System.out.println(aa[0] + ":" + aa[1]);
-    }
 }
