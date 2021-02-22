@@ -70,6 +70,8 @@ public class DatabaseRequests implements SqlRequests {
 
         } while (choose.equalsIgnoreCase("Y"));
 
+        scanner.close();
+
         // проверка каждого id что можно заказать
 
         list.removeIf(f -> {
@@ -134,6 +136,8 @@ public class DatabaseRequests implements SqlRequests {
 
         Connect.session.saveOrUpdate(orderItems);
 
+        scanner.close();
+
         Connect.session.getTransaction().commit();
     }
 
@@ -144,10 +148,13 @@ public class DatabaseRequests implements SqlRequests {
           ProductShort с нужными колонками или сохранять все данные из Product и выводить нужные поля
          */
         Connect.session.beginTransaction();
+
         query = Connect.session.createQuery("From Product");
-//        query = Connect.session.createQuery("select * From Product");
+
         Connect.session.getTransaction().commit();
+
         List<Product> productList = query.list();
+
         productList.forEach(f -> {
             System.out.println("|Name: " + f.getName() + " | Price: " + f.getPrice() + " | Status: " + f.getStatus());
         });
@@ -180,6 +187,7 @@ public class DatabaseRequests implements SqlRequests {
         System.out.println(query.list().size());
 
         List<Object[]> list = query.list();
+
         list.forEach(f -> {
             Product product = (Product) f[0];
 
@@ -281,6 +289,8 @@ public class DatabaseRequests implements SqlRequests {
 
         Connect.session.saveOrUpdate(product);
 
+        scanner.close();
+
         // TODO удалить ли сущности order_items с указанным Product ID
 //        query = Connect.session.createQuery("delete from OrderItems where product = " + productId);
 //        query.executeUpdate();
@@ -315,6 +325,8 @@ public class DatabaseRequests implements SqlRequests {
             System.out.println("Wrong Password");
         }
 
+        scanner.close();
+
         Connect.session.getTransaction().commit();
     }
 
@@ -333,16 +345,17 @@ public class DatabaseRequests implements SqlRequests {
         System.out.println("2 - in_stock");
         System.out.println("3 - running_low");
 
-        int productStatus = scanner.nextInt();
+        String productStatus = scanner.nextLine();
+
         switch (productStatus) {
-            case 1:
+            case "1":
                 return ProductStatus.out_of_stock;
-            case 2:
+            case "2":
                 return ProductStatus.in_stock;
-            case 3:
+            case "3":
                 return ProductStatus.running_low;
             default:
-                throw new RuntimeException("incorrect choose product status");
+                throw new RuntimeException("Incorrect choose product status. Choose between 1 - 3");
         }
     }
 }

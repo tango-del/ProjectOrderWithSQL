@@ -6,7 +6,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class StartProgram {
-    public static Scanner scanner;
+    private static Scanner scanner;
     static Session session;
 
     public static void main(String[] args) {
