@@ -10,7 +10,7 @@
 
         <property name="connection.url">jdbc:mysql://localhost:3306/shop?serverTimezone=UTC</property>
         <property name="connection.username">root</property>
-        <property name="connection.password">Sobik2010</property>
+        <property name="connection.password">temp_pass</property>
 
         <property name="show_sql">true</property>
 <!--        <property name="format_sql">true</property>-->
